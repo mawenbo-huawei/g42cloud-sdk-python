@@ -2,7 +2,7 @@ name: Upload Python Package To Test Pypi
 on:
   workflow_dispatch:
   release:
-    types: [published]
+    types: [created]
 jobs:
   deploy:
     runs-on: ubuntu-22.04
@@ -27,9 +27,7 @@ jobs:
       shell: bash
     - name: Publish package
       run: |
-        echo "[testpypi]" >> "${HOME}/.pypirc"
-        echo "username = __token__" >> "${HOME}/.pypirc"
-        echo "password = ${TEST_PYPI_API_TOKEN}" >> "${HOME}/.pypirc"
+        echo -e "[testpypi]\nusername = __token__\npassword = ${TEST_PYPI_API_TOKEN}" >> "${HOME}/.pypirc"
         cd "${GITHUB_WORKSPACE}" || exit 1
         twine upload --repository testpypi ./*.whl --skip-existing --verbose
       env:
